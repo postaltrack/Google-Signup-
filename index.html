@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Auth</title>
+  <script type="module">
+    // Import Firebase SDK (if using script tag, skip these imports and use <script> instead)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Firebase configuration (replace with yours from Firebase Console)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Email/Password Sign-Up
+    document.getElementById("signup-btn").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          alert("User signed up: " + userCredential.user.email);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+
+    // Email/Password Login
+    document.getElementById("login-btn").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          alert("Logged in: " + userCredential.user.email);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+
+    // Google Sign-In
+    const provider = new GoogleAuthProvider();
+    document.getElementById("google-btn").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then(result => {
+          alert("Google user: " + result.user.email);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+  </script>
+</head>
+<body>
+  <h2>Firebase Authentication</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="signup-btn">Sign Up</button>
+  <button id="login-btn">Login</button>
+  <button id="google-btn">Sign In with Google</button>
+</body>
+</html>
